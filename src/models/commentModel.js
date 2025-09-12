@@ -14,5 +14,3 @@ const findTaskById= async(task_id)=>{
 };
 module.exports={addComment,getCommentByTaskId,findTaskById};
 
-// orm -
-// entity
