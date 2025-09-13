@@ -1,0 +1,33 @@
+const{EntitySchema}=require('typeorm');
+const { password, type } = require('../config/ormconfig');
+module.exports=new EntitySchema({
+    name:'User',
+    tableName:'users',
+    columns:{
+        id:{
+            primary:true,
+            type:'int',
+            generated:true,
+        },
+        name:{type:'varchar',length:50},
+        email:{type:'varchar',length:100,unique:true},
+        password:{type:'varchar',length:100 }
+    },
+    relations:{
+        taskCreated:{
+            type:'one-to-many',
+            target:'Task',
+            inverseSide:'created_by'
+        },
+        taskAssigned:{
+            type:'one-to-many',
+            target:'Task',
+            inverseSide:'assigned_to'
+        },
+        comments:{
+            type:'one-to-many',
+            target:'Comment',
+            inverseSide:'user'
+        }
+    }
+});

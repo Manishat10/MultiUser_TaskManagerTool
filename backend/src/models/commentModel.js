@@ -1,4 +1,4 @@
-const pool=require('../config/db');
+const pool=require('../config/ormconfig');
 const addComment= async(task_id,user_id,text)=>{
     return pool.query(
         'INSERT INTO comments(task_id, user_id,text) VALUES($1,$2,$3) RETURNING *',

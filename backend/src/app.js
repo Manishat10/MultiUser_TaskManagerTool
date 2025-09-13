@@ -1,3 +1,4 @@
+require('reflect-metadata');
 const express = require('express');
 const userRoutes = require('./routes/userRoutes');
 const taskRoutes = require('./routes/taskRoutes'); 

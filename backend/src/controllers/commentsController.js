@@ -1,32 +1,19 @@
-const {addComment,getCommentByTaskId}=require('../models/commentModel')
-exports.createComment=async (req, res)=>{
-    const {id}= req.params;
-    const {text}= req.body;
-    const user_id=req.user.id;
-    if(!text){
-        return res.status(400).json({message:"Comment text is required"});
-    }
-    try{
-        
-        const newComment =await addComment(id,user_id,text);
-        res.status(201).json(newComment.rows[0]);
-    }
-    catch(err){
-        console.log(err.message);
-        return res.status(500).send("server error");  
-    }
+const CommentService = require('../services/tasks/comments/commentService');
 
+exports.createComment = async (req, res) => {
+  try {
+    const comment = await CommentService.createComment(req.params.id, req.user.id, req.body.text);
+    res.status(201).json(comment);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 };
 
-exports.getComments= async(req,res)=>{
-    const {id}=req.params;
-    try{
-        
-        const comments= await getCommentByTaskId(id);
-        res.json(comments.rows);
-    }
-    catch(err){
-        console.log(err.message);
-        res.status(500).send("server error");  
-    }
-}
+exports.getComments = async (req, res) => {
+  try {
+    const comments = await CommentService.getComments(req.params.id, req.user.id);
+    res.json(comments);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

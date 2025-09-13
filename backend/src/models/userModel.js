@@ -1,4 +1,4 @@
-const pool= require('../config/db');
+const pool= require('../config/ormconfig');
 
 const findUserByEmail=async(email)=>{
     return pool.query('SELECT *FROM users WHERE email=$1',[email]);

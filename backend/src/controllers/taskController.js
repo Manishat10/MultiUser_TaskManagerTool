@@ -1,129 +1,47 @@
-const pool = require("../config/db");
+const TaskService = require('../services/tasks/taskService');
 
 exports.createTask = async (req, res) => {
-  const { title, description, status, due_date, assignedTo } = req.body;
-  const userId = req.user.id;
-
   try {
-    // Basic validation
-    if (!title || !due_date) {
-      return res.status(400).json({ message: "Title and due_date are required" });
-    }
-
-    const result = await pool.query(
-      `INSERT INTO tasks (title, description, status, due_date, created_by, assigned_to) 
-       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [title, description, status || "pending", due_date, userId, assignedTo || userId]
-    );
-
-    res.status(201).json(result.rows[0]);
+    const newTask = await TaskService.createTask(req.user.id, req.body);
+    res.status(201).json(newTask);
   } catch (err) {
-    console.error("Error creating task:", err.message);
-    res.status(500).send("Server error");
+    res.status(400).json({ message: err.message });
   }
 };
 
-//get task
-exports.getTask= async(req,res)=>{
-    const {id} =req.params;
-    const userId=req.user.id;
-    try{
-        const result= await pool.query(
-            "SELECT * FROM tasks WHERE id =$1",[id]
-        );
-        if(result.rows.length===0){
-            return res.status(404).json({message:"task not found"});
-        }
-        const task= result.rows[0];
-        res.json(task);
-    }catch(err){
-        console.log(err.message);
-        res.status(500).send("Server error");   
-    }
+exports.getTask = async (req, res) => {
+  try {
+    const task = await TaskService.getTask(req.params.id, req.user.id);
+    if (!task) return res.status(404).json({ message: "task not found" });
+    res.json(task);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
-exports.updateTask= async(req,res)=>{
-    const {id}=req.params;
-    const {title,description,status,due_date,assigned_to}=req.body;
-    const userId = req.user.id;
-    try{
-        const fields=[];
-        const values=[];
-        let queryIndex=1;
-        if(title!==undefined){
-            fields.push(`title =$${queryIndex}`);
-            values.push(title);
-            queryIndex++;
-        }
-        if(description!==undefined){
-            fields.push(`description =$${queryIndex}`);
-            values.push(description);
-            queryIndex++;
-        }
-        if(status!==undefined){
-            fields.push(`status =$${queryIndex}`);
-            values.push(status);
-            queryIndex++;
-        }
-        if(due_date!==undefined){
-            fields.push(`due_date =$${queryIndex}`);
-            values.push(due_date);
-            queryIndex++;
-        }
-        if(assigned_to!==undefined){
-            fields.push(`assigned_to =$${queryIndex}`);
-            values.push(assigned_to);
-            queryIndex++;
-        }
-        if(fields.length===0){
-            return res.status(400).json({message:"No fields to Update"})
-        }
-        values.push(id);
-        const queryText=`UPDATE tasks SET ${fields.join(", ")} WHERE id=$${queryIndex} RETURNING *`;
-        const updated = await pool.query(queryText,values);
-        return res.json(updated.rows[0]);
-    }catch(err){
-        console.log(err.message);
-        return res.status(500).send("server error");
-    }
+exports.updateTask = async (req, res) => {
+  try {
+    const updated = await TaskService.updateTask(req.params.id, req.body, req.user.id);
+    res.json(updated);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 };
-exports.deleteTask= async(req,res)=>{
-    const { id }=req.params;
-    try{
-        
-        await pool.query("DELETE FROM tasks WHERE id =$1",[id]);
-        res.json({message:"Task deleted successfully"});
-    }
-    catch(err){
-        console.log(err.message);
-        return res.status(500).send("server error");
-        
-    }
-};
-exports.getFilteredTasks= async(req,res)=>{
-    const userId= req.user.id;
-    const{status,assigned_to}=req.query;
-    let query="SELECT * FROM tasks WHERE 1=1";
-    let params=[];
-    let count=1;
-    if(status){
-        query+=` AND status =$${count++}`;
-        params.push(status);
-    }
-    if(assigned_to){
-        query+=` AND assigned_to =$${count++}`;
-        params.push(assigned_to);
-    }
-    query+=` AND (created_by =$${count} OR assigned_to =$${count})`;
-    params.push(userId);
-    try{
-        const result=await pool.query(query,params);
-        res.json(result.rows);
-    }
-    catch(err){
-        console.log(err.message);
-        return res.status(500).send('Server Error');
-    }
 
+exports.deleteTask = async (req, res) => {
+  try {
+    await TaskService.deleteTask(req.params.id, req.user.id);
+    res.json({ message: "Task deleted successfully" });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
 };
-// in_progress
+
+exports.getFilteredTasks = async (req, res) => {
+  try {
+    const tasks = await TaskService.getFilteredTasks(req.user.id, req.query);
+    res.json(tasks);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
