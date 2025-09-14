@@ -1,4 +1,3 @@
-const { findTaskById } = require("../models/commentModel");
 const TaskRepository = require('../repositories/TaskRepository'); // Assuming this is the correct path
 const checkTaskViewAccess= async(req,res,next)=>{
     const {id}=req.params;
