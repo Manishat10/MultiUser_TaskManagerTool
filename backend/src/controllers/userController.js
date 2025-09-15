@@ -16,3 +16,13 @@ exports.loginUser = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
+exports.logoutUser= async(req,res)=>{
+  try{
+    await UserService.logout(req.token);
+    res.status(200).json({message:"Logout Successful"});
+  }
+  catch(err){
+    res.status(500).json({message:"Failed to log out"});
+  }
+};

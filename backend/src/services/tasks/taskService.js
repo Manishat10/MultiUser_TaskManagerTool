@@ -6,11 +6,10 @@ exports.createTask = async (userId, data) => {
         taskData.assigned_to=userId;
     }
     return await TaskRepository.createTask(taskData);
-};
+}; 
 
 exports.getTask = async (id) => {
     const task = await TaskRepository.findTaskById(id);
-    // You should probably handle the case where the task is not found here.
     return task;
 };
 
@@ -23,8 +22,6 @@ exports.deleteTask = async (id) => {
 };
 
 exports.getFilteredTasks = async (userId, filters) => {
-    // Note: The logic for this is slightly more complex, as you need to build the query correctly.
-    // Your repository function `findFiltered` is already set up to handle this.
     const finalFilters={...filters};
     if(finalFilters.assigned_to){
         finalFilters.assigned_to=parseInt(finalFilters.assigned_to,10);

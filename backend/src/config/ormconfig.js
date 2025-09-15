@@ -1,4 +1,3 @@
-
 require('dotenv').config();
 const {DataSource}=require('typeorm');
 
@@ -9,7 +8,7 @@ const AppDataSource=new DataSource({
   database: process.env.DB_NAME,
   password:process.env.DB_PASSWORD,
   port:process.env.DB_PORT,
-  entities:[
+  entities:[ 
     __dirname + '/../entities/*.js'
   ],
   synchronize:true,

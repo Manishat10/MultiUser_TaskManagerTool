@@ -1,5 +1,4 @@
 const{EntitySchema}=require('typeorm');
-const { password, type } = require('../config/ormconfig');
 module.exports=new EntitySchema({
     name:'User',
     tableName:'users',

@@ -1,11 +1,8 @@
-require('dotenv').config();
-const app = require('./app');
-const AppDataSource = require('./config/ormconfig');
+const app = require('./app'); 
+const AppDataSource = require('./config/ormconfig'); 
+const PORT = process.env.PORT || 5000; 
 
-const PORT = process.env.PORT || 5000;
-
-// You MUST init DataSource BEFORE starting server!
-AppDataSource.initialize()
+AppDataSource.initialize()  
   .then(() => {
     console.log("[TypeORM] Database started!");
     app.listen(PORT, () => {
