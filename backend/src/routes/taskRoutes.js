@@ -10,7 +10,7 @@ const router =express.Router();
 
 router.post("/",auth,validate(validateCreateTask),createTask);
 router.get("/:id",auth,checkTaskViewAccess,getTask);
-router.put("/:id",auth,checkTaskOwnerAccess,updateTask);
+router.patch("/:id",auth,checkTaskOwnerAccess,updateTask);
 router.delete("/:id",auth,checkTaskOwnerAccess,deleteTask);
 router.get("/",auth,validate(validateFilterTask),getFilteredTasks);
 module.exports=router;
