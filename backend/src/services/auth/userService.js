@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const UserRepository = require('../../repositories/UserRepository');
 const tokenStore =require('../tokens/tokenStore');
+const { use } = require('../../app');
 
 exports.register = async ({ name, email, password }) => {
   const existing = await UserRepository.findByEmail(email);
@@ -24,7 +25,7 @@ exports.login = async ({ email, password }) => {
     throw new Error("Invalid Credentials");
   }
   const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-  return token;
+  return {token,user};
 };
 
 exports.logout= async(token)=>{
