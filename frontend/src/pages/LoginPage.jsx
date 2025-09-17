@@ -10,7 +10,6 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
-
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
 

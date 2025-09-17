@@ -4,6 +4,7 @@ export async function loginUser(credentials) {
   try {
     const response = await fetch(`${API_BASE_URL}/users/login`, {
       method: "POST",
+      credentials: "include", // Include cookies for session management
       headers: {
         "Content-Type": "application/json",
       },
@@ -16,7 +17,7 @@ export async function loginUser(credentials) {
     }
 
     const data = await response.json();
-    return data; // e.g., { token, user }
+    return data; 
   } catch (error) {
     throw error;
   }
