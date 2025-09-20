@@ -8,7 +8,7 @@ module.exports = new EntitySchema({
         created_at: { type: 'timestamp', createDate: true },
     },
     relations: {
-        task: { type: 'many-to-one', target: 'Task', joinColumn: true },
+        task: { type: 'many-to-one', target: 'Task', joinColumn: {name:'task_id'},onDelete: 'CASCADE' },
         user: { type: 'many-to-one', target: 'User', joinColumn: true }
     }
 });

@@ -1,5 +1,5 @@
 const express=require('express');
-const{registerUser,loginUser,logoutUser}=require('../controllers/userController');
+const{registerUser,loginUser,logoutUser,checkAuthUser,getAllUsers}=require('../controllers/userController');
 const validate=require('../middlewares/validate');
 const validateLogin= require('../services/auth/loginValidation');
 const validateRegister=require('../services/auth/registerValidation');
@@ -8,5 +8,6 @@ const router=express.Router();
 router.post('/register',validate(validateRegister),registerUser);
 router.post('/login',validate(validateLogin),loginUser);
 router.post('/logout',auth,logoutUser);
-
+router.get('/checkAuth',auth,checkAuthUser);
+router.get('/all', auth, getAllUsers);
 module.exports=router;

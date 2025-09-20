@@ -1,3 +1,4 @@
+
 const InputForm = ({
   label,
   type = "text",
@@ -9,7 +10,7 @@ const InputForm = ({
   disabled = false,
   ...rest
 }) => (
-  <div className="mb-4">
+  <div className="">
     {label && (
       <label
         htmlFor={name}
@@ -32,11 +33,10 @@ const InputForm = ({
           : "border-gray-300 focus:ring-blue-400"
       } ${disabled ? "bg-gray-100 cursor-not-allowed" : "bg-white"}`}
       {...rest}
-    />{
-        error && (
-        <p className="mt-1 text-sm text-red-600">{error}</p>
+    />
+    {error && (
+      <p className="mt-1 text-sm text-red-600">{error}</p>
     )}
   </div>
 );
-
 export default InputForm;

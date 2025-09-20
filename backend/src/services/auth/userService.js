@@ -5,18 +5,20 @@ const tokenStore =require('../tokens/tokenStore');
 const { use } = require('../../app');
 
 exports.register = async ({ name, email, password }) => {
-  const existing = await UserRepository.findByEmail(email);
+  const lowercaseEmail = email.toLowerCase();
+  const existing = await UserRepository.findByEmail(lowercaseEmail);
   if (existing) {
     throw new Error("User already exists");
   }  
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await UserRepository.createUser({ name, email, password: hashedPassword });
+  const user = await UserRepository.createUser({ name, email:lowercaseEmail, password: hashedPassword });
   delete user.password;
   return user;
 };
 
 exports.login = async ({ email, password }) => {
-  const user = await UserRepository.findByEmail(email);
+  const lowercaseEmail = email.toLowerCase();
+  const user = await UserRepository.findByEmail(lowercaseEmail);
   if (!user) {
     throw new Error("Invalid Credentials");
   }
@@ -31,3 +33,6 @@ exports.login = async ({ email, password }) => {
 exports.logout= async(token)=>{
     tokenStore.blackListedToken(token);
 };
+exports.getAllUsers=async()=>{
+    return await UserRepository.findAll();
+}

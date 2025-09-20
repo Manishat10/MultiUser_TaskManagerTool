@@ -3,7 +3,7 @@ const tokenStore=require('../services/tokens/tokenStore');
 const authMiddleware= (req,res,next)=>{
     const token= req.cookies?.token;
     console.log("Token from cookie:", token);
-    if(!token) return res.status(401).json({message:'No token, authorization denied'});
+    if(!token) return res.status(401).json({message:'authorization denied'});
     try{
         if(tokenStore.isTokenBlackListed(token)){
             return res.status(401).json({message:'Please login again'});

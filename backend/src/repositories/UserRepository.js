@@ -11,6 +11,10 @@ async function createUser({ name, email, password }) {
     await repo.save(user);
     return user;
 }
+async function findAll() {
+    const repo = AppDataSource.getRepository(User);
+    return await repo.find();
+}
 
 async function findById(id) {
     return await repo.findOne(id);
@@ -20,4 +24,5 @@ module.exports = {
     findByEmail,
     createUser,
     findById,
+    findAll,
 };

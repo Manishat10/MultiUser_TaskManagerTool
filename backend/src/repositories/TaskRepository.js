@@ -26,25 +26,29 @@ async function deleteTask(id) {
     return await repo.delete(id);
 }
 
+async function findFiltered(userId, filters = {}) {
+  const repo = AppDataSource.getRepository(Task);
+  const query = repo.createQueryBuilder('task')
+    .leftJoinAndSelect('task.created_by', 'created_by')
+    .leftJoinAndSelect('task.assigned_to', 'assigned_to');
+  if (userId) {
+    query.where('(created_by.id = :userId OR assigned_to.id = :userId)', { userId });
+  }
 
-async function findFiltered(userId, filters) {
-    const repo = AppDataSource.getRepository(Task);
-    const query= repo.createQueryBuilder('task')
-    .leftJoinAndSelect('task.created_by','created_by')
-    .leftJoinAndSelect('task.assigned_to','assigned_to');
+  if (filters.status) {
+    query.andWhere('task.status = :status', { status: filters.status });
+  }
 
-    query.where(
-        'task.created_by.id =:userId OR task.assigned_to.id=:userId',
-        {userId:userId}
-    );
-    if (filters.status) {
-        query.andWhere('task.status = :status', { status: filters.status });
-    }
-    if (filters.assigned_to) {
-        query.andWhere('task.assigned_to.id = :assignedToId', { assignedToId: filters.assigned_to });
-    }
-    return await query.getMany();
+  if (filters.assigned_to !== undefined && filters.assigned_to !== null && filters.assigned_to !== '') {
+    const assignedToId = typeof filters.assigned_to === 'string'
+      ? parseInt(filters.assigned_to, 10)
+      : filters.assigned_to;
+    query.andWhere('assigned_to.id = :assignedToId', { assignedToId });
+  }
+
+  return await query.getMany();
 }
+
 module.exports = {
     findTaskById,
     createTask,

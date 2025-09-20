@@ -28,7 +28,9 @@ module.exports= new EntitySchema({
         comments:{
             type:'one-to-many',
             target:'Comment',
-            inverseSide:'task'
+            inverseSide:'task',
+            cascade: true,
+            onDelete: 'CASCADE'
 
         }
     }

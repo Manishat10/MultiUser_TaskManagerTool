@@ -1,4 +1,9 @@
 const{EntitySchema}=require('typeorm');
+const lowercaseTransformer = {
+  from: (value) => value,
+  to: (value) => value ? value.toLowerCase() : value,
+};
+
 module.exports=new EntitySchema({
     name:'User',
     tableName:'users',
@@ -9,7 +14,7 @@ module.exports=new EntitySchema({
             generated:true,
         },
         name:{type:'varchar',length:50},
-        email:{type:'varchar',length:100,unique:true},
+        email:{type:'varchar',length:100,unique:true,transformer: lowercaseTransformer},
         password:{type:'varchar',length:100 }
     },
     relations:{
