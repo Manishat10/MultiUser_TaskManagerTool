@@ -19,7 +19,7 @@ A secure RESTful API built with Node.js, Express, and PostgreSQL that supports r
 - Node.js & Express.js
 - PostgreSQL
 - JWT for authentication
-- React (for front-end, if applicable)
+- React
 - React DnD Kit (for drag-and-drop)
 
 ## Getting Started
@@ -28,7 +28,7 @@ A secure RESTful API built with Node.js, Express, and PostgreSQL that supports r
 
 - Node.js installed
 - PostgreSQL set up with a database and user
-- npm or yarn package manager
+- npm
 
 ### Installation
 1. Clone the repo:
@@ -60,9 +60,8 @@ npm start
 
 ## Role-Based Access Control (RBAC)
 
-- **Roles**: Admin, Manager, User
+- **Roles**: Admin, User
 - **Permissions**: Create, read, update, delete tasks; comment; assign; move tasks
-- Roles are assigned during registration or via admin panel.
 - Access to endpoints is controlled based on user role, enforced via middleware.
 
 
@@ -82,4 +81,5 @@ This README provides a detailed overview of your task manager API, highlighting 
 
 
 1. Clone the repo:
+
 
