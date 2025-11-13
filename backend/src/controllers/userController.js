@@ -43,18 +43,45 @@ exports.logoutUser = async (req, res) => {
     res.status(500).json({ message: "Failed to log out" });
   }
 };
+
 exports.checkAuthUser = (req, res) => {
   res.status(200).json({
     isAuthenticated: true,
     userId: req.user.id,
+    isAdmin: req.user.isAdmin || false
   });
 };
+
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await UserService.getAllUsers();
     // Return only essential user data (e.g., id and name)
-    const publicUsers = users.map((user) => ({ id: user.id, name: user.name }));
+    const publicUsers = users.map((user) => ({ 
+      id: user.id, 
+      name: user.name, 
+      email: user.email,
+      isAdmin: user.isAdmin || false
+    }));
     res.json(publicUsers);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Admin endpoints
+exports.getAllTasks = async (req, res) => {
+  try {
+    const tasks = await UserService.getAllTasks();
+    res.json(tasks);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+exports.getAllComments = async (req, res) => {
+  try {
+    const comments = await UserService.getAllComments();
+    res.json(comments);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

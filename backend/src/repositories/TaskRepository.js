@@ -49,10 +49,19 @@ async function findFiltered(userId, filters = {}) {
   return await query.getMany();
 }
 
+// New function for admin to get all tasks
+async function findAllTasks() {
+    const repo = AppDataSource.getRepository(Task);
+    return await repo.find({
+        relations: ['created_by', 'assigned_to', 'comments']
+    });
+}
+
 module.exports = {
     findTaskById,
     createTask,
     updateTask,
     deleteTask,
     findFiltered,
+    findAllTasks
 };

@@ -5,9 +5,9 @@ import InputForm from "../components/InputForm";
 import Button from "../components/Button";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import FormGroup from "../components/FormGroup"; // Import the new component
+import FormGroup from "../components/FormGroup";
 
-const LoginPage = () => {
+const AdminLoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -17,11 +17,12 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      // Redirect admins to admin login
+      // Redirect admins to admin dashboard
       if (user && user.isAdmin) {
-        navigate("/admin/login");
+        navigate("/admin/dashboard", { replace: true });
       } else {
-        navigate("/dashboard",{ replace: true });
+        // If regular user tries to access admin login, redirect to user dashboard
+        navigate("/dashboard", { replace: true });
       }
     }
   }, [isAuthenticated, user, navigate]);
@@ -42,23 +43,23 @@ const LoginPage = () => {
     e.preventDefault();
     if (validate()) {
       const lowercaseCredentials = {
-      email: form.email.toLowerCase(), 
-      password: form.password,
-    };
+        email: form.email.toLowerCase(), 
+        password: form.password,
+      };
       dispatch(login(lowercaseCredentials));
     }
   };
 
   return (
     <div className="max-w-md mx-auto mt-16 p-6 rounded-md shadow-lg bg-white">
-      <h1 className="text-2xl font-semibold mb-6 text-center">Login</h1>
+      <h1 className="text-2xl font-semibold mb-6 text-center">Admin Login</h1>
       <form onSubmit={handleSubmit} noValidate>
         <FormGroup>
           <InputForm
             label="Email"
             type="email"
             name="email"
-            placeholder="Enter your email"
+            placeholder="Enter your admin email"
             value={form.email}
             onChange={handleChange}
             error={errors.email}
@@ -67,27 +68,21 @@ const LoginPage = () => {
             label="Password"
             type="password"
             name="password"
-            placeholder="Enter your password"
+            placeholder="Enter your admin password"
             value={form.password}
             onChange={handleChange}
             error={errors.password}
           />
-          {error && <p className="text-red-600 mb-2 text-center  ">{error}</p>}
+          {error && <p className="text-red-600 mb-2 text-center">{error}</p>}
           <Button type="submit" className="w-full text-white" disabled={loading}>
-            {loading ? "Logging in..." : "Log In"}
+            {loading ? "Logging in..." : "Admin Log In"}
           </Button>
         </FormGroup>
       </form>
       <div className="mt-4 text-center">
         <p className="text-sm">
-          Don't have an account?{" "}
-          <Link to="/register" className="text-blue-600 hover:underline">
-            Register
-          </Link>
-        </p>
-        <p className="text-sm mt-2">
-          Admin login?{" "}
-          <Link to="/admin/login" className="text-blue-600 hover:underline">
+          User login?{" "}
+          <Link to="/login" className="text-blue-600 hover:underline">
             Click here
           </Link>
         </p>
@@ -95,4 +90,5 @@ const LoginPage = () => {
     </div>
   );
 };
-export default LoginPage;
+
+export default AdminLoginPage;

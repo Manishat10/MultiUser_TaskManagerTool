@@ -2,7 +2,10 @@ const AppDataSource = require('../config/ormconfig');
 const User = require('../entities/User');
 async function findByEmail(email) {
     const repo = AppDataSource.getRepository(User);
-    return await repo.findOne({ where: { email } });
+    return await repo.findOne({ 
+        where: { email },
+        select: ['id', 'name', 'email', 'password', 'isAdmin']
+    });
 }
 
 async function createUser({ name, email, password }) {
@@ -11,13 +14,20 @@ async function createUser({ name, email, password }) {
     await repo.save(user);
     return user;
 }
+
 async function findAll() {
     const repo = AppDataSource.getRepository(User);
-    return await repo.find();
+    return await repo.find({
+        select: ['id', 'name', 'email', 'isAdmin']
+    });
 }
 
 async function findById(id) {
-    return await repo.findOne(id);
+    const repo = AppDataSource.getRepository(User);
+    return await repo.findOne({ 
+        where: { id },
+        select: ['id', 'name', 'email', 'isAdmin']
+    });
 }
 
 module.exports = {

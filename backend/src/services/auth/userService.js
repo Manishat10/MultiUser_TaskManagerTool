@@ -12,6 +12,7 @@ exports.register = async ({ name, email, password }) => {
   }  
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await UserRepository.createUser({ name, email:lowercaseEmail, password: hashedPassword });
+  // Remove password from response
   delete user.password;
   return user;
 };
@@ -26,13 +27,28 @@ exports.login = async ({ email, password }) => {
   if (!isMatch) {
     throw new Error("Invalid Credentials");
   }
-  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  // Include isAdmin in the token payload
+  const token = jwt.sign({ userId: user.id, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: '1h' });
+  // Remove password from response
+  delete user.password;
   return {token,user};
 };
 
 exports.logout= async(token)=>{
     tokenStore.blackListedToken(token);
 };
+
 exports.getAllUsers=async()=>{
     return await UserRepository.findAll();
-}
+};
+
+// New admin functions
+exports.getAllTasks = async () => {
+    const TaskRepository = require('../../repositories/TaskRepository');
+    return await TaskRepository.findAllTasks();
+};
+
+exports.getAllComments = async () => {
+    const CommentRepository = require('../../repositories/commentRepository');
+    return await CommentRepository.findAllComments();
+};

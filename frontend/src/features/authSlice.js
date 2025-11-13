@@ -12,6 +12,7 @@ export const login = createAsyncThunk(
     }
   }
 );
+
 export const checkAuthThunk = createAsyncThunk(
   "auth/checkAuthThunk",
   async (_, { rejectWithValue }) => {
@@ -23,6 +24,7 @@ export const checkAuthThunk = createAsyncThunk(
     }
   }
 );
+
 export const register = createAsyncThunk(
   "auth/register",
   async (userInfo, { rejectWithValue }) => {
@@ -34,6 +36,7 @@ export const register = createAsyncThunk(
     }
   }
 );
+
 export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { rejectWithValue }) => {
@@ -69,7 +72,10 @@ const authSlice = createSlice({
         state.loading = false;
         if (action.payload) {
           state.isAuthenticated = true;
-          state.user = action.payload.user;
+          state.user = {
+            id: action.payload.userId,
+            isAdmin: action.payload.isAdmin || false
+          };
         } else {
           state.isAuthenticated = false;
           state.user = null;
@@ -82,7 +88,10 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
+        state.user = {
+          id: action.payload.user.id,
+          isAdmin: action.payload.user.isAdmin || false
+        };
         state.isAuthenticated = true;
       })
       .addCase(logout.fulfilled, (state) => {
@@ -92,7 +101,10 @@ const authSlice = createSlice({
       })
       .addCase(register.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user || null;
+        state.user = action.payload.user ? {
+          id: action.payload.user.id,
+          isAdmin: action.payload.user.isAdmin || false
+        } : null;
         state.isAuthenticated = true;
       })
       .addMatcher(

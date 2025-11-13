@@ -30,7 +30,17 @@ async function getByTaskId(task_id) {
     });
 }
 
+// New function for admin to get all comments
+async function findAllComments() {
+    const repo = AppDataSource.getRepository(Comment);
+    return await repo.find({
+        relations: ['user', 'task'],
+        order: { created_at: "ASC" }
+    });
+}
+
 module.exports = {
     addComment,
     getByTaskId,
+    findAllComments
 };

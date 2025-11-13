@@ -15,7 +15,9 @@ module.exports=new EntitySchema({
         },
         name:{type:'varchar',length:50},
         email:{type:'varchar',length:100,unique:true,transformer: lowercaseTransformer},
-        password:{type:'varchar',length:100 }
+        password:{type:'varchar',length:100 },
+        // Add isAdmin field for admin functionality
+        isAdmin:{type:'boolean', default:false}
     },
     relations:{
         taskCreated:{
